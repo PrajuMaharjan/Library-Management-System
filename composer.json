@@ -1,0 +1,17 @@
+{
+    "name": "lenovo/course-work",
+    "autoload": {
+        "psr-4": {
+            "Lenovo\\CourseWork\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "PrajuMaharjan",
+            "email": "prajumaharjan903@gmail.com"
+        }
+    ],
+    "require": {
+        "jenssegers/blade": "^2.0"
+    }
+}
