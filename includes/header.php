@@ -1,3 +1,14 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../config/db.php';
+
+$is_logged_in = isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && isset($_SESSION['username']);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,227 +16,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            padding: 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+.header {
+    background: midnightblue;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-        .header-top {
-            background: rgba(0,0,0,0.2);
-            padding: 10px 0;
-        }
+.header-main {
+    padding: 20px 0;
+}
 
-        .header-top .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
-        }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .contact-info {
-            display: flex;
-            gap: 20px;
-        }
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
 
-        .contact-info span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+nav a,a.btn{
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
 
-        .header-main {
-            padding: 20px 0;
-        }
+nav a:hover,a.btn:hover{
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+nav a.active,a.btn.active{
+    background: rgba(255,255,255,0.3);
+}
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-        .logo {
-            font-size: 2em;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            color: #3498db;
-        }
+.btn-logout {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    background: rgba(231, 76, 60, 0.8);
+    border: 2px solid rgba(231, 76, 60, 0.3);
+}
 
-        .tagline {
-            font-size: 0.5em;
-            opacity: 0.9;
-            font-weight: normal;
-        }
-
-        nav {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        nav a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        nav a.active {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .search-box {
-            display: flex;
-            background: rgba(255,255,255,0.2);
-            border-radius: 25px;
-            padding: 8px 15px;
-            align-items: center;
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            padding: 0 10px;
-            width: 200px;
-        }
-
-        .search-box input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3498db;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                display: none;
-            }
-            
-            .search-box input {
-                width: 150px;
-            }
-        }
+.btn-logout:hover {
+    background: rgba(231, 76, 60, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-top">
-            <div class="container">
-                <div class="contact-info">
-                    <span>📧 library@example.com</span>
-                    <span>📞 +1 (555) 123-4567</span>
-                </div>
-                <div>
-                    <span>⏰ Mon-Fri: 8:00 AM - 8:00 PM</span>
-                </div>
-            </div>
-        </div>
-        
+    <header class="header">        
         <div class="header-main">
             <div class="container">
                 <div class="logo-section">
-                    <a href="index.html" class="logo">
-                        <div class="logo-icon">📚</div>
-                        <div>
-                            LibraryHub
-                            <div class="tagline">Your Gateway to Knowledge</div>
-                        </div>
-                    </a>
+                    <?php if ($is_logged_in && isset($_SESSION['name']) && !empty($_SESSION['name'])): ?>
+                        <span style="color:white; font-weight:bold; font-size: 40px;">
+                            Welcome <?php echo htmlspecialchars($_SESSION['name']); ?>
+                        </span>
+                    <?php else: ?>
+                        <span style="color:white; font-weight:bold; font-size: 40px;">
+                            Welcome to the Library
+                        </span>
+                    <?php endif; ?>
                 </div>
-
+                
                 <nav>
-                    <a href="index.html" class="active">Home</a>
-                    <a href="catalog.html">Catalog</a>
-                    <a href="my-books.html">My Books</a>
-                    <a href="services.html">Services</a>
-                    <a href="events.html">Events</a>
-                    <a href="about.html">About</a>
+                    <a href="index.php">Home</a>
+                    <a href="#featured">Featured Books</a>
+                    <a href="#books">Catalog</a>
+                    
+                    <?php if ($is_logged_in): ?>
+                        <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
+                            <a href="../admin/dashboard.php">Admin Dashboard</a>
+                        <?php else: ?>
+                            <a href="user/user-dashboard.php">My Dashboard</a>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </nav>
-
+                
                 <div class="user-section">
-                    <div class="search-box">
-                        <span>🔍</span>
-                        <input type="text" placeholder="Search books...">
-                    </div>
-                    <div class="user-profile">
-                        <div class="user-avatar">JD</div>
-                        <span>John Doe</span>
-                    </div>
+                    <?php if ($is_logged_in): ?>
+                        <span style="color: white; margin-right: 15px;">
+                            <?php echo htmlspecialchars($_SESSION['username']); ?>
+                            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
+                                <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 3px; font-size: 12px; margin-left: 5px;">Admin</span>
+                            <?php endif; ?>
+                        </span>
+                        <a href="/Library-Management-System/authentication/logout.php" class="btn">Logout</a>
+                    <?php else: ?>
+                        <div class="auth-links">
+                            <a href="/Library-Management-System/authentication/login.php" class="btn">Login</a>
+                            <a href="/Library-Management-System/authentication/signup.php" class="btn">Sign Up</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
