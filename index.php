@@ -95,7 +95,7 @@ $genres = $genres_stmt->fetchAll(PDO::FETCH_COLUMN);
             <div class="hero-content">
                 <?php if (!$is_logged_in): ?>
                 <div class="login-prompt">
-                    <p><a href="authentication/login.php">Login</a> or <a href="authentication/signup.php">Sign up</a> to borrow books</p>
+                    <p><a href="authentication/login.php">Login</a> or <a href="authentication/signup.php">Sign up</a> to borrow books</p>  
                 </div>
                 <?php endif; ?>
             </div>
@@ -200,9 +200,9 @@ $genres = $genres_stmt->fetchAll(PDO::FETCH_COLUMN);
                                         <a href="authentication/login.php?redirect=borrow.php?id=<?php echo $book['id']; ?>" class="btn btn-secondary">Login to Borrow</a>
                                     <?php endif; ?>
                                     <?php if ($is_admin): ?>
-                                        <a href="admin/edit.php?id=<?php echo $book['id']; ?>" class="btn btn-edit">✏️ Edit</a>
+                                        <a href="admin/edit.php?id=<?php echo $book['id']; ?>" class="btn btn-edit"> Edit</a>
                                         <a href="admin/delete.php?id=<?php echo $book['id']; ?>" class="btn btn-delete" 
-                                           onclick="return confirm('Are you sure you want to delete this book?')">🗑️ Delete</a>
+                                           onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
                                     <?php endif; ?>
                                 </div>
                             </div>

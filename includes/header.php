@@ -135,11 +135,11 @@ nav a.active,a.btn.active{
                                 <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 3px; font-size: 12px; margin-left: 5px;">Admin</span>
                             <?php endif; ?>
                         </span>
-                        <a href="/Library-Management-System/authentication/logout.php" class="btn">Logout</a>
+                        <a href="../authentication/logout.php" class="btn">Logout</a>
                     <?php else: ?>
                         <div class="auth-links">
-                            <a href="/Library-Management-System/authentication/login.php" class="btn">Login</a>
-                            <a href="/Library-Management-System/authentication/signup.php" class="btn">Sign Up</a>
+                            <a href="authentication/login.php" class="btn">Login</a>
+                            <a href="authentication/signup.php" class="btn">Sign Up</a>
                         </div>
                     <?php endif; ?>
                 </div>

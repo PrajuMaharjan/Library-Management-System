@@ -1,9 +1,9 @@
 <?php
 
 $host="localhost";
-$database="library_management_system";
-$user="root";
-$password="";
+$database="np03cs4a240217";
+$user="np03cs4a240217";
+$password="2bCpct0qAC";
 
 try{
 	$pdo=new PDO("mysql:host=$host;dbname=$database",$user,$password);
