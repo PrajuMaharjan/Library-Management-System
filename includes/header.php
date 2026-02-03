@@ -115,7 +115,6 @@ nav a.active,a.btn.active{
                 </div>
                 
                 <nav>
-                    <a href="index.php">Home</a>
                     <a href="#featured">Featured Books</a>
                     <a href="#books">Catalog</a>
                     

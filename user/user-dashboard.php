@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Check if user is a regular user (not admin)
+// Check if user is admin or not
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
     header('Location: ../index.php');
     exit();
@@ -80,280 +80,15 @@ function bookCoverSrc($book) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Borrowed Books - LibraryHub</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        
-        .dashboard-header h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .dashboard-header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-        
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .books-section {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        
-        .section-title {
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #f0f0f0;
-        }
-        
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .book-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        }
-        
-        .book-image {
-            height: 350px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .book-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .borrowed-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #e74c3c;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .book-details {
-            padding: 20px;
-        }
-        
-        .book-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-        
-        .book-author {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-        
-        .book-info {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #555;
-        }
-        
-        .book-genre {
-            background: #e8f4f8;
-            color: #667eea;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        
-        .borrow-count {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        
-        .return-form {
-            margin-top: 15px;
-        }
-        
-        .btn-return {
-            width: 100%;
-            padding: 12px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .btn-return:hover {
-            background: #229954;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-        }
-        
-        .empty-icon {
-            font-size: 80px;
-            color: #bdc3c7;
-            margin-bottom: 20px;
-        }
-        
-        .empty-title {
-            font-size: 24px;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-        }
-        
-        .empty-message {
-            font-size: 16px;
-            color: #95a5a6;
-            margin-bottom: 30px;
-        }
-        
-        .btn-browse {
-            display: inline-block;
-            padding: 15px 40px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .btn-browse:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-        
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            flex: 1;
-            min-width: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard-header h1 {
-                font-size: 28px;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
-            }
-            
-            .stats-bar {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/user_dashboard.css">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
     
     <div class="container">
         <div class="dashboard-header">
-            <h1>📚 My Borrowed Books</h1>
+            <h1> My Borrowed Books</h1>
             <p>Welcome back, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
         </div>
         
@@ -416,15 +151,13 @@ function bookCoverSrc($book) {
                 </div>
             <?php else: ?>
                 <div class="empty-state">
-                    <div class="empty-icon">📚</div>
                     <h2 class="empty-title">No Borrowed Books</h2>
-                    <p class="empty-message">You haven't borrowed any books yet. Start exploring our collection!</p>
+                    <p class="empty-message">You haven't borrowed any books yet. Start exploring our catalog!</p>
                     <a href="../index.php" class="btn-browse">Browse Books</a>
                 </div>
             <?php endif; ?>
         </div>
     </div>
-    
     <?php include '../includes/footer.php'; ?>
 </body>
 </html>

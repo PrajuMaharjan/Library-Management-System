@@ -62,19 +62,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - LibraryHub</title>
-    <style>
-    body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:20px;}
-    .login-container { max-width:400px; margin:50px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,.1);}
-    .login-box h1 { text-align:center; }
-    .form-group { margin-bottom:15px; }
-    input { width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; }
-    button { width:100%; padding:10px; border:none; background:#3498db; color:#fff; font-size:16px; border-radius:4px; cursor:pointer; }
-    button:hover { background:#2980b9; }
-    .alert { padding:10px; margin-bottom:15px; border-radius:4px; }
-    .alert-error { background:#f8d7da; color:#721c24; }
-    .alert-success { background:#d4edda; color:#155724; }
-    .form-footer { margin-top:15px; text-align:center; }
-    </style>
+    <link rel="stylesheet" href="../assets/css/login.css">
     </head>
     <body>
     <div class="login-container">
